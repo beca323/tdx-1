@@ -3,11 +3,27 @@ import jsSHA from 'jssha'
 
 // const TOURISM_API_URL = 'https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot/Taipei?$top=30&$format=JSON'
 const TOURISM_API_URL = 'https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot/'
+const ACTICITY_API_URL = 'https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity/'
+const HOTEL_API_URL = 'https://ptx.transportdata.tw/MOTC/v2/Tourism/Hotel/'
+const RESTAURANT_API_URL = 'https://ptx.transportdata.tw/MOTC/v2/Tourism/Restaurant/'
 
 export function getTourismAPI(city) {
-  return axios(TOURISM_API_URL + city, { headers: getAuthorizationHeader() })
+  return getAPIfunction(TOURISM_API_URL, city, 'tourismData')
+}
+export function getActivityAPI(city) {
+  return getAPIfunction(ACTICITY_API_URL, city, 'activityData')
+}
+export function getHotelAPI(city) {
+  return getAPIfunction(HOTEL_API_URL, city, 'hotelData')
+}
+export function getRestaurantAPI(city) {
+  return getAPIfunction(RESTAURANT_API_URL, city, 'restaurantData')
+}
+
+function getAPIfunction(url, city, sessionName) {
+  return axios(url + city, { headers: getAuthorizationHeader() })
     .then((response) => {
-      sessionStorage.setItem('tourismData', JSON.stringify(response.data))
+      sessionStorage.setItem(sessionName, JSON.stringify(response.data))
       console.log(response.data[0])
       return response.data
     })
@@ -15,8 +31,6 @@ export function getTourismAPI(city) {
       return 'error: ' + error
     })
 }
-
-
 
 function getAuthorizationHeader() {
   //  填入自己 ID、KEY 開始

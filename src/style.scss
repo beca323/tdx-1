@@ -14,6 +14,15 @@ body {
 html {
   scroll-behavior: smooth;
 }
+html,
+body {
+  height: 100%;
+}
+#root {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100vh;
+}
 @mixin paperShadow() {
   position: relative;
   display: block;
@@ -64,67 +73,138 @@ html {
     @content;
   }
 }
-
-select,
-input,
-.btn {
-  line-height: 2rem;
-  height: 2rem;
-  outline: none;
-  border: #385c76 1px solid;
+@mixin r-card {
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 10px;
-  margin: 0 5px;
-  padding: 0 10px;
-}
-select,
-input[type="submit"],
-.btn {
-  cursor: pointer;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+  &:hover {
+    background: #ffffff;
+    box-shadow: 0px 5px 6px 3px rgba(0, 0, 0, 0.2);
+    .r-btn {
+      background-color: #5994bf;
+    }
+  }
+  .text {
+    padding: 3% 6%;
+    width: 100%;
+    .title {
+      white-space: nowrap;
+      overflow: auto;
+    }
+  }
 }
 
 .ScrollToTop {
   position: fixed;
-  bottom: 7vw;
+  bottom: 14vw;
   right: 3vw;
   cursor: pointer;
   z-index: 1;
   height: 9vw;
   width: 9vw;
-  max-width: 100px;
-  max-height: 72px;
+  max-width: 90px;
+  max-height: 60px;
   // display: none;
   // transition: all 1s;
 }
-
+.r-a-tag {
+  color: #e7a600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.r-card {
+  @include r-card();
+}
 .WanWhere {
+  height: 100%;
   .logo-picture {
-    display: flex;
-    flex-direction: column;
     height: 500px;
-    justify-content: center;
-    h1 {
-      color: white;
-      font-size: 9rem;
-      @include pad {
-        font-size: 7rem;
+    > div {
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      h1 {
+        color: white;
+        font-size: 9rem;
+        text-shadow: 1px 1px 10px rgba($color: $base-color, $alpha: 0.3);
+        @include pad {
+          font-size: 7rem;
+        }
+        @include mobile {
+          font-size: 5rem;
+        }
+        @include mobileS {
+          font-size: 4rem;
+        }
       }
-      @include mobile {
-        font-size: 5rem;
-      }
-      @include mobileS {
-        font-size: 4rem;
+      > :last-child {
+        width: 65%;
+        text-align: right;
+        a {
+          text-shadow: 1px 1px 10px rgba($color: $base-color, $alpha: 0.3);
+          text-decoration: underline;
+          font-size: 113%;
+        }
       }
     }
-    > :last-child {
-      width: 50%;
-      text-align: right;
-      a {
-        text-decoration: underline;
-        font-size: 113%;
+    @include mobile() {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr 1.3fr;
+      > div {
+        height: unset;
       }
     }
   }
   .search-set {
+    .mobile {
+      display: none;
+      @include mobile() {
+        display: block;
+        // border: 1px solid currentColor;
+        border-radius: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 2px;
+        margin-top: 20px;
+        margin-bottom: 4px;
+
+        > div {
+          border: 1px solid currentColor;
+          margin: -1px;
+          padding: 0 20px;
+          &:nth-child(1) {
+            border-radius: 10px 0 0 0;
+          }
+          &:nth-child(2) {
+            border-radius: 0 10px 0 0;
+          }
+          &:nth-child(3) {
+            border-radius: 0 0 0 10px;
+          }
+          &:nth-child(4) {
+            border-radius: 0 0 10px 0;
+          }
+        }
+      }
+    }
+    .desktop {
+      display: block;
+      @include mobile() {
+        display: none;
+      }
+    }
+    @include mobile() {
+      position: absolute;
+      transform: translateY(-120%) translateX(5%);
+    }
     * {
       font-size: 1.1rem;
     }
@@ -162,9 +242,9 @@ input[type="submit"],
       grid-template-columns: 3fr 4fr 130px;
       @include mobile {
         grid-template-columns: 1fr;
-        button {
-          max-width: 130px;
-        }
+        // button {
+        // max-width: 130px;
+        // }
       }
       select,
       input,
@@ -176,104 +256,201 @@ input[type="submit"],
       button * {
         background-color: $base-color;
         color: white;
-        display: flex;
-        justify-content: space-around;
       }
     }
   }
 }
 .tourism-card-container {
   margin: auto;
-  width: 90%;
+  width: 94%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   @include desktop {
     grid-template-columns: 1fr;
   }
-  .tourism-card {
-    max-width: 870px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 44px;
-    height: 30vw;
-    max-height: 290px;
-    overflow: hidden;
-    padding: 20px;
-    width: 90%;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba($color: #fff, $alpha: 0.4);
-      box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-    }
-    > div {
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-    }
-    .img {
-      img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        transform: scale(95%) translateX(20px) translateY(20px);
-      }
-      &::before {
-        content: "";
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        // transform: scale(90%);
-        transform: scale(100%) translateX(-20px) translateY(-20px);
-        background: #dadada;
-        z-index: -1;
-      }
-    }
+}
+.tourism-card {
+  max-width: 900px;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 44px;
+  height: 26vw;
+  max-height: 220px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  transform: scale(0.9);
+  &:hover,
+  &.active-card {
+    background-color: rgba($color: #fff, $alpha: 0.4);
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    transform: scale(1);
     .text {
-      flex-direction: column;
-      display: flex;
-      justify-content: space-between;
-      padding-top: 20px;
-      > div {
-        width: 100%;
+      transform: scale(0.9) translateX(-20px);
+    }
+  }
+  > div {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+  .img {
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      // transform: scale(95%) translateX(20px) translateY(20px);
+    }
+    // &::before {
+    //   content: "";
+    //   position: absolute;
+    //   height: 100%;
+    //   width: 100%;
+    //   // transform: scale(90%);
+    //   transform: scale(100%) translateX(-20px) translateY(-20px);
+    //   background: #dadada;
+    //   z-index: -1;
+    // }
+  }
+  .text {
+    flex-direction: column;
+    display: flex;
+    transition: all 0.2s ease;
+    justify-content: space-between;
+    > div {
+      width: 100%;
+    }
+    .title {
+      @include pad() {
+        white-space: nowrap;
+        font-size: 1.2rem;
       }
-      .title {
-        font-weight: bold;
-        font-size: 1.5rem;
+    }
+    .DescriptionDetail {
+      height: fit-content;
+    }
+  }
+}
+.tourism-tags {
+  display: flex;
+  gap: 6px;
+  .tourism-tag {
+    white-space: nowrap;
+    color: #829793;
+    border: 1px solid #819793;
+    border-radius: 5px;
+    padding: 3px 8px;
+  }
+}
+.Recommend {
+  max-width: 900px;
+  width: 94%;
+  margin: auto;
+  display: grid;
+  gap: 120px;
+  section {
+    width: 100%;
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    :nth-last-child(1) {
+      overflow-x: auto;
+      overflow-y: visible;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hint {
+    color: #819793;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    text-align: center;
+    margin: 50px;
+    @include mobile() {
+      grid-template-columns: 1fr;
+    }
+  }
+  .activity {
+    display: flex;
+    gap: 4%;
+    .card {
+      min-width: 370px;
+      .img {
+        max-height: 240px;
+        overflow: hidden;
       }
-      .DescriptionDetail {
-        height: fit-content;
-        .tourism-tags {
-          display: flex;
-          gap: 6px;
-          .tourism-tag {
-            color: #829793;
-            border: 1px solid #819793;
-            border-radius: 5px;
-            padding: 3px 8px;
-          }
+      .text {
+        padding: 3% 6%;
+        .r-btn {
+          position: absolute;
+          bottom: 3%;
+          right: 3%;
         }
       }
     }
   }
-}
-.App > :first-child {
-  display: flex;
+  .hotel {
+    display: flex;
+    // grid-template-columns: 1fr 1fr 1fr;
+    gap: 2%;
+    .card {
+      cursor: pointer;
+      min-width: 240px;
+      width: 32%;
+      .text {
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .img {
+        object-fit: cover;
+        // min-height: 200px;
+        height: 200px;
+        // max-height: 200px;
+        overflow: hidden;
+      }
+    }
+  }
+  // max-width: 900px;
+  // width: 100%;
+  @include mobile() {
+    .tourism {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 4%;
+      .tourism-card {
+        grid-template-columns: 1fr;
+        height: unset;
+        max-height: unset;
+        gap: 0;
+        min-width: 370px;
+        .text {
+          width: 100%;
+        }
+        @include r-card();
+      }
+    }
+  }
 }
 .selectCity {
   padding: 5px 10px;
 }
-
 .cardsContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 10px;
   max-width: 900px;
   margin: 30px auto;
-  width: 90%;
+  width: 94%;
   > div {
     @include paperShadow();
     // box-shadow: 0 0 10px #e2e2e2;
@@ -286,19 +463,53 @@ input[type="submit"],
   }
 }
 .attraction {
-  width: 90%;
+  width: 94%;
+  max-width: 870px;
   margin: auto;
   .img {
     width: 100%;
     overflow: hidden;
     object-fit: cover;
     img {
-      width: 100%;
       height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transform: scale(70%) translateX(-60px) translateY(-20px);
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      transform: scale(70%) translateX(60px) translateY(20px);
+      background: #dadada;
+      z-index: -1;
+    }
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
+    > div {
+      transition: all 0.2s ease;
+    }
+    > div:hover {
+      color: white;
+      background-color: $base-color;
     }
   }
 }
-
+footer {
+  color: white;
+  width: 100%;
+  height: fit-content;
+  padding: 24px;
+  display: flex;
+  white-space: nowrap;
+  justify-content: center;
+  gap: 26px;
+  background-color: $base-color;
+}
 @media (max-width: 768px) {
   .cardsContainer {
     grid-template-columns: 1fr 1fr;

@@ -1,6 +1,57 @@
+$base-color: #385c76;
 .r-input-text {
   border: none;
   border-bottom: 1px solid gray;
   outline: none;
   padding: 5px 10px;
+}
+
+.r-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 3rem;
+}
+
+.r-title-2 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 2.4rem;
+}
+
+.r-btn-outline {
+  margin: 5px;
+  display: inline;
+  cursor: pointer;
+  border: 1px solid currentColor;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+.r-btn {
+  margin: 5px;
+  display: inline;
+  cursor: pointer;
+  border: 1px solid currentColor;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.r-btn {
+  background-color: $base-color;
+}
+select,
+input,
+.btn {
+  line-height: 2rem;
+  height: 2rem;
+  outline: none;
+  border: #385c76 1px solid;
+  border-radius: 10px;
+  margin: 0 5px;
+  padding: 0 10px;
+}
+select,
+input[type="submit"],
+.btn {
+  cursor: pointer;
 }

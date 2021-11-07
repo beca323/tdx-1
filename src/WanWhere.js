@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { getTourismAPI } from './function/getTourismAPI'
+import { getTourismAPI, getActivityAPI, getHotelAPI, getRestaurantAPI } from './function/getTourismAPI'
 import ScrollToTop from './svg/ScrollToTop'
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
+import { Routes, Route, Link, useNavigate } from "react-router-dom"
+import { Attraction } from './page/Attraction'
+import Recommend from './page/Recommend'
 
 const currentURL = '/tdx-1'
 export default function WanWhere() {
@@ -9,6 +11,7 @@ export default function WanWhere() {
   const [selectCity, setSelectCity] = useState('Taipei')
   const [findWhat, setFindWhat] = useState('view')
   const [keyword, setKeyword] = useState('')
+  const navigate = useNavigate()
   const beautifulPicture = {
     cn: '南投',
     pictureName: 'NANTOU',
@@ -23,8 +26,8 @@ export default function WanWhere() {
     setFindWhat(e.target.value)
   }
   const handleSearch = (e) => {
+    navigate(currentURL + '/search')
     e.preventDefault()
-    // console.log('searching...')
     getTourismAPI(selectCity).then(result => {
       // console.log(result)
       if (keyword.replace(' ') !== '') {
@@ -46,6 +49,48 @@ export default function WanWhere() {
       setApiData(result)
     })
   }, [])
+  const [acticityData, setActicityData] = useState([])
+  useEffect(() => {
+    if (sessionStorage.getItem('activityData')) {
+      console.log('acticity, from session: ')
+      // console.log(JSON.parse(sessionStorage.getItem('activityData'))[0])
+      setActicityData(JSON.parse(sessionStorage.getItem('activityData')))
+      return
+    }
+    getActivityAPI('Taipei').then(result => {
+      // console.log(result)
+      console.log('acticity, fetch api')
+      setActicityData(result)
+    })
+  }, [])
+  const [hotelData, setHotelData] = useState([])
+  useEffect(() => {
+    if (sessionStorage.getItem('hotelData')) {
+      console.log('hotelData, from session: ')
+      console.log(JSON.parse(sessionStorage.getItem('hotelData'))[0])
+      setHotelData(JSON.parse(sessionStorage.getItem('hotelData')))
+      return
+    }
+    getHotelAPI('Taipei').then(result => {
+      // console.log(result)
+      console.log('hotelData, fetch api')
+      setHotelData(result)
+    })
+  }, [])
+  const [restaurantData, setRestaurantData] = useState([])
+  useEffect(() => {
+    if (sessionStorage.getItem('restaurantData')) {
+      console.log('restaurantData, from session: ')
+      console.log(JSON.parse(sessionStorage.getItem('restaurantData'))[0])
+      setRestaurantData(JSON.parse(sessionStorage.getItem('restaurantData')))
+      return
+    }
+    getRestaurantAPI('NantouCounty').then(result => {
+      // console.log(result)
+      console.log('restaurantData, fetch api')
+      setRestaurantData(result)
+    })
+  }, [])
   return (
     <div className="WanWhere">
       <ScrollToTop />
@@ -53,13 +98,20 @@ export default function WanWhere() {
       <SearchSet
         keyword={keyword}
         setKeyword={setKeyword}
-        handleSearch={handleSearch} handleSelectCity={handleSelectCity} handleChangeFind={handleChangeFind} findWhat={findWhat} />
-      <Router>
-        <Routes>
-          <Route path={`${currentURL}`} exact element={<CardsContainer apiData={apiData} />} />
-          <Route path={`${currentURL}/attraction`} element={<Attraction apiData={apiData} />} />
-        </Routes>
-      </Router>
+        handleSearch={handleSearch}
+        handleSelectCity={handleSelectCity}
+        handleChangeFind={handleChangeFind}
+        findWhat={findWhat} />
+      <Routes>
+        <Route path={`${currentURL}`} exact element={
+          <Recommend
+            acticityData={acticityData}
+            hotelData={hotelData}
+            tourismData={apiData}
+            restaurantData={restaurantData} />} />
+        <Route path={`${currentURL}/search`} element={<CardsContainer apiData={apiData} />} />
+        <Route path={`${currentURL}/attraction`} element={<Attraction apiData={apiData} />} />
+      </Routes>
     </div>
   )
 }
@@ -72,15 +124,18 @@ export function LogoPicture({ beautifulPicture }) {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat'
       }}>
-      <a href={currentURL} >
-        <img src="./image/Logo.png" alt="灣去哪兒？" />
-      </a>
-      <h1>{beautifulPicture.pictureName}</h1>
-      <div className="subtitle">
-        <a href="./" style={{ color: 'white' }}>
-          {beautifulPicture.cn}去哪兒？>>
+      <div>
+        <a href={currentURL} >
+          <img src={currentURL + "/image/Logo.png"} alt="灣去哪兒？" />
         </a>
+        <h1>{beautifulPicture.pictureName}</h1>
+        <div className="subtitle">
+          <a href="./" style={{ color: 'white' }}>
+            {beautifulPicture.cn}去哪兒？>>
+        </a>
+        </div>
       </div>
+      <div> </div>
     </div>
   )
 }
@@ -88,7 +143,7 @@ export function LogoPicture({ beautifulPicture }) {
 export function SearchSet({ keyword, setKeyword, handleSearch, handleSelectCity, handleChangeFind, findWhat }) {
   return (
     <div className="search-set">
-      <div>
+      <div className="desktop">
         <input type="radio" name="find" id="view" value="view" onChange={handleChangeFind} checked={findWhat === 'view'} />
         <label htmlFor="view"><span></span>找景點</label>
           &emsp;&emsp;
@@ -100,6 +155,12 @@ export function SearchSet({ keyword, setKeyword, handleSearch, handleSelectCity,
           &emsp;&emsp;
           <input type="radio" name="find" id="activity" value="activity" onChange={handleChangeFind} checked={findWhat === 'activity'} />
         <label htmlFor="activity"><span></span>找活動</label>
+      </div>
+      <div className="mobile">
+        <div><i className="fas fa-camera"></i> 找景點</div>
+        <div><i className="fas fa-bed"></i> 找飯店</div>
+        <div><i className="fas fa-utensils"></i> 找美食</div>
+        <div><i className="fas fa-tag" style={{ transform: 'rotateY(180deg)' }}></i> 找活動</div>
       </div>
       <form>
         <select className="selectCity" name="City" onChange={handleSelectCity} >
@@ -130,7 +191,7 @@ export function SearchSet({ keyword, setKeyword, handleSearch, handleSelectCity,
           onChange={e => setKeyword(e.target.value)}
           onSubmit={handleSearch}
           type="text" placeholder="或用關鍵字搜尋想去哪玩？" />
-        <button onClick={handleSearch} className="btn"><i className="fas fa-search"></i>搜 尋</button>
+        <button onClick={handleSearch} className="btn"><i className="fas fa-search"></i>&emsp;搜 尋</button>
       </form>
     </div>
   )
@@ -151,7 +212,7 @@ export function CardsContainer({ apiData }) {
                 <img src={item.Picture.PictureUrl1} alt={item.Name} />
               </div>
               <div className="text">
-                <div className="title">{item.Name}</div>
+                <div className="r-title title">{item.Name}</div>
                 <div className="DescriptionDetail">
                   <div className="tourism-tags">
                     {item.Level ? <span className="tourism-tag"># {item.Level}</span> : ''}
@@ -162,7 +223,7 @@ export function CardsContainer({ apiData }) {
 
                   {item.DescriptionDetail.substring(0, 76)}
                   ... &emsp;
-                <span style={{ color: '#E7A600', textDecoration: 'underline' }}>
+                <span className="r-a-tag">
                     more >>
                 </span>
                 </div>
@@ -171,35 +232,6 @@ export function CardsContainer({ apiData }) {
           </div>
         )
       })}
-    </div>
-  )
-}
-
-export function Attraction({ apiData }) {
-  const [attractionData, setAttractionData] = useState([])
-  const attractionID = window.location.search.split('id=')[1]
-  const getAttractionData = () => {
-    console.log(apiData.length)
-
-    if (apiData.length === 0) return
-    console.log(attractionID)
-    let temp = apiData.find((item) => {
-      return item.ID === attractionID
-    })
-    setAttractionData(temp)
-  }
-  useEffect(() => {
-    getAttractionData()
-  }, [apiData])
-  return (
-    <div className="attraction">
-      {attractionData.Picture ?
-        <div className="img">
-          <img src={attractionData.Picture.PictureUrl1} alt={attractionData.Name} />
-        </div>
-        : ''}
-      <div>{attractionData.Name}</div>
-      <div>{attractionData.DescriptionDetail}</div>
     </div>
   )
 }
