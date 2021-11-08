@@ -4,19 +4,19 @@ import ScrollToTop from './svg/ScrollToTop'
 import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import { Attraction } from './page/Attraction'
 import Recommend from './page/Recommend'
+import { beautifulPictures } from './function/HomePictures'
 
 const currentURL = '/tdx-1'
 export default function WanWhere() {
   const [apiData, setApiData] = useState([])
+  const [acticityData, setActicityData] = useState([])
+  const [hotelData, setHotelData] = useState([])
+  const [restaurantData, setRestaurantData] = useState([])
   const [selectCity, setSelectCity] = useState('Taipei')
   const [findWhat, setFindWhat] = useState('view')
   const [keyword, setKeyword] = useState('')
   const navigate = useNavigate()
-  const beautifulPicture = {
-    cn: '南投',
-    pictureName: 'NANTOU',
-    pictureUrl: 'https://i.imgur.com/GwUpUVl.jpg',
-  }
+  const beautifulPicture = beautifulPictures[2]
   const handleSelectCity = (e) => {
     // console.log(e.target.value)
     setSelectCity(e.target.value)
@@ -26,71 +26,86 @@ export default function WanWhere() {
     setFindWhat(e.target.value)
   }
   const handleSearch = (e) => {
-    navigate(currentURL + '/search')
     e.preventDefault()
-    getTourismAPI(selectCity).then(result => {
-      // console.log(result)
-      if (keyword.replace(' ') !== '') {
-        result = result.filter(e => e.Name.includes(keyword))
-      }
-      setApiData(result)
-    })
+    switch (findWhat) {
+      case 'view':
+        navigate(currentURL + '/search-view')
+        getTourismAPI(selectCity).then(result => {
+          if (keyword.replace(' ') !== '') {
+            result = result.filter(e => e.Name.includes(keyword))
+          }
+          setApiData(result)
+        })
+        break
+
+      case 'hotel':
+        navigate(currentURL + '/search-hotel')
+        getHotelAPI(selectCity).then(result => {
+          if (keyword.replace(' ') !== '') {
+            result = result.filter(e => e.Name.includes(keyword))
+          }
+          console.log(result)
+          setHotelData(result)
+        })
+        break
+      default:
+        break
+    }
+
+
   }
-  useEffect(() => {
-    if (sessionStorage.getItem('tourismData')) {
-      console.log('from session: ')
-      // console.log(JSON.parse(sessionStorage.getItem('tourismData')))
-      setApiData(JSON.parse(sessionStorage.getItem('tourismData')))
-      return
+
+  const apiFunctions = {
+    tourism: function () {
+      if (sessionStorage.getItem('tourismData')) {
+        setApiData(JSON.parse(sessionStorage.getItem('tourismData')))
+        return
+      }
+      getTourismAPI(selectCity).then(result => {
+        setApiData(result)
+      })
+    },
+    activity: function () {
+      if (sessionStorage.getItem('activityData')) {
+        setActicityData(JSON.parse(sessionStorage.getItem('activityData')))
+        return
+      }
+      getActivityAPI('Taipei').then(result => {
+        setActicityData(result)
+      })
+    },
+    hotel: function () {
+      if (sessionStorage.getItem('hotelData')) {
+        console.log('hotelData, from session: ')
+        setHotelData(JSON.parse(sessionStorage.getItem('hotelData')))
+        return
+      }
+      getHotelAPI('Taipei').then(result => {
+        // console.log(result)
+        console.log('hotelData, fetch api')
+        setHotelData(result)
+      })
+    },
+    restaurant: function () {
+      if (sessionStorage.getItem('restaurantData')) {
+        console.log('restaurantData, from session: ')
+        setRestaurantData(JSON.parse(sessionStorage.getItem('restaurantData')))
+        return
+      }
+      getRestaurantAPI('NantouCounty').then(result => {
+        console.log('restaurantData, fetch api')
+        setRestaurantData(result)
+      })
     }
-    getTourismAPI(selectCity).then(result => {
-      // console.log(result)
-      console.log('fetch api')
-      setApiData(result)
-    })
-  }, [])
-  const [acticityData, setActicityData] = useState([])
+  }
+
   useEffect(() => {
-    if (sessionStorage.getItem('activityData')) {
-      console.log('acticity, from session: ')
-      // console.log(JSON.parse(sessionStorage.getItem('activityData'))[0])
-      setActicityData(JSON.parse(sessionStorage.getItem('activityData')))
-      return
-    }
-    getActivityAPI('Taipei').then(result => {
-      // console.log(result)
-      console.log('acticity, fetch api')
-      setActicityData(result)
-    })
+    apiFunctions.tourism()
+    apiFunctions.activity()
+    apiFunctions.hotel()
+    apiFunctions.restaurant()
   }, [])
-  const [hotelData, setHotelData] = useState([])
-  useEffect(() => {
-    if (sessionStorage.getItem('hotelData')) {
-      console.log('hotelData, from session: ')
-      console.log(JSON.parse(sessionStorage.getItem('hotelData'))[0])
-      setHotelData(JSON.parse(sessionStorage.getItem('hotelData')))
-      return
-    }
-    getHotelAPI('Taipei').then(result => {
-      // console.log(result)
-      console.log('hotelData, fetch api')
-      setHotelData(result)
-    })
-  }, [])
-  const [restaurantData, setRestaurantData] = useState([])
-  useEffect(() => {
-    if (sessionStorage.getItem('restaurantData')) {
-      console.log('restaurantData, from session: ')
-      console.log(JSON.parse(sessionStorage.getItem('restaurantData'))[0])
-      setRestaurantData(JSON.parse(sessionStorage.getItem('restaurantData')))
-      return
-    }
-    getRestaurantAPI('NantouCounty').then(result => {
-      // console.log(result)
-      console.log('restaurantData, fetch api')
-      setRestaurantData(result)
-    })
-  }, [])
+
   return (
     <div className="WanWhere">
       <ScrollToTop />
@@ -109,7 +124,8 @@ export default function WanWhere() {
             hotelData={hotelData}
             tourismData={apiData}
             restaurantData={restaurantData} />} />
-        <Route path={`${currentURL}/search`} element={<CardsContainer apiData={apiData} />} />
+        <Route path={`${currentURL}/search-view`} element={<CardsContainer apiData={apiData} />} />
+        <Route path={`${currentURL}/search-hotel`} element={<HotelCardsContainer hotelData={hotelData} />} />
         <Route path={`${currentURL}/attraction`} element={<Attraction apiData={apiData} />} />
       </Routes>
     </div>
@@ -122,7 +138,8 @@ export function LogoPicture({ beautifulPicture }) {
       style={{
         background: 'url(' + beautifulPicture.pictureUrl + ')',
         backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center'
       }}>
       <div>
         <a href={currentURL} >
@@ -230,6 +247,30 @@ export function CardsContainer({ apiData }) {
               </div>
             </Link>
           </div>
+        )
+      })}
+    </div>
+  )
+}
+
+export function HotelCardsContainer({ hotelData }) {
+  const top15 = hotelData.slice(0, 15)
+  useEffect(() => {
+    console.log(hotelData)
+  }, [])
+  return (
+    <div className="tourism-card-container hotel">
+      {top15.map((item, index) => {
+        return (
+          <a key={index} href={item?.WebsiteUrl} target="_blank" className="r-card card">
+            <div className="img">
+              <img src={item?.Picture.PictureUrl1} atl={item?.Name} />
+            </div>
+            <div className="text">
+              <div className="r-title title">{item?.Name}</div>
+              <div><i className="fas fa-map-marker-alt"></i> {item?.Address}</div>
+            </div>
+          </a>
         )
       })}
     </div>

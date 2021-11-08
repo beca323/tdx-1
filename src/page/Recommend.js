@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
+const currentURL = '/tdx-1'
 export default function Recommend({ restaurantData, acticityData, tourismData, hotelData }) {
-  useEffect(() => {
-    console.log(acticityData[0])
-
-  }, [])
   return (
     <div className="Recommend">
       <section>
@@ -83,24 +81,26 @@ export function ActivityCard({ item }) {
 
 export function TourismCard({ item }) {
   return (
-    <div className="tourism-card active-card">
-      <div className="img">
-        <img src={item?.Picture.PictureUrl1} alt={item?.Name} />
-      </div>
-      <div className="text">
-        <div className="r-title title">{item?.Name}</div>
-        {item?.Address ? <div><i className="fas fa-map-marker-alt"></i>{item?.Address}</div> : ''}
-        <div className="DescriptionDetail">
-          <div className="tourism-tags">
-            {item?.Level ? <span className="tourism-tag"># {item?.Level}</span> : ''}
-            {item?.Class1 ? <span className="tourism-tag "># {item?.Class1}</span> : <span className="tourism-tag "># 未分類</span>}
-            {item?.Class2 ? <span className="tourism-tag "># {item?.Class2}</span> : ''}
-            {item?.Class3 ? <span className="tourism-tag "># {item?.Class3}</span> : ''}
-          </div>
-          {item?.DescriptionDetail.substring(0, 76)}... &emsp;
-          <span className="r-a-tag">more >></span>
+    <div>
+      <Link to={`${currentURL}/attraction?id=${item?.ID}`} className="tourism-card active-card">
+        <div className="img">
+          <img src={item?.Picture.PictureUrl1} alt={item?.Name} />
         </div>
-      </div>
+        <div className="text">
+          <div className="r-title title">{item?.Name}</div>
+          {item?.Address ? <div><i className="fas fa-map-marker-alt"></i>{item?.Address}</div> : ''}
+          <div className="DescriptionDetail">
+            <div className="tourism-tags">
+              {item?.Level ? <span className="tourism-tag"># {item?.Level}</span> : ''}
+              {item?.Class1 ? <span className="tourism-tag "># {item?.Class1}</span> : <span className="tourism-tag "># 未分類</span>}
+              {item?.Class2 ? <span className="tourism-tag "># {item?.Class2}</span> : ''}
+              {item?.Class3 ? <span className="tourism-tag "># {item?.Class3}</span> : ''}
+            </div>
+            {item?.DescriptionDetail.substring(0, 76)}... &emsp;
+          <span className="r-a-tag">more >></span>
+          </div>
+        </div>
+      </Link>
     </div>
   )
 }

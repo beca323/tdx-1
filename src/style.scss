@@ -213,7 +213,7 @@ body {
     width: 90%;
     max-width: 800px;
     padding: 0 20px 20px 20px;
-    transform: translateY(-50%);
+    transform: translateY(-20%);
     border-radius: 7px;
     margin: auto;
     input[type="radio"] {
@@ -256,6 +256,29 @@ body {
       button * {
         background-color: $base-color;
         color: white;
+      }
+    }
+  }
+  .hotel {
+    max-width: 900px;
+    width: 94%;
+    margin: 100px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4%;
+    @include pad() {
+      grid-template-columns: 1fr 1fr;
+    }
+    .card {
+      cursor: pointer;
+      .text {
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .img {
+        object-fit: cover;
+        height: 200px;
+        overflow: hidden;
       }
     }
   }
@@ -333,6 +356,20 @@ body {
       height: fit-content;
     }
   }
+  @include mobile() {
+    grid-template-columns: 1fr;
+    height: unset;
+    background-color: white;
+    min-height: 400px;
+    height: 40vh;
+    max-height: unset;
+    margin: 0;
+    gap: 0;
+    .text {
+      width: 100%;
+    }
+    @include r-card();
+  }
 }
 .tourism-tags {
   display: flex;
@@ -356,6 +393,9 @@ body {
     overflow: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    &:first-child {
+      margin-top: 60px;
+    }
     :nth-last-child(1) {
       overflow-x: auto;
       overflow-y: visible;

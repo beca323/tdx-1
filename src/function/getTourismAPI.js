@@ -31,7 +31,8 @@ function getAPIfunction(url, city, sessionName) {
       return 'error: ' + error
     })
 }
-
+// let AppID = '5ddfc0c285614c22a8a286f5bff4129a'
+// let AppKey = 'GIOQcKqB9crpqy0er73phPbKy2Y'
 function getAuthorizationHeader() {
   //  填入自己 ID、KEY 開始
   let AppID = 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'
