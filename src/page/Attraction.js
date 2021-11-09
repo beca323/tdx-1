@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 export function Attraction({ apiData }) {
   const [attractionData, setAttractionData] = useState([])
-  const [attractionIndex, setAttractionIndex] = useState(0)
+  // const [attractionIndex, setAttractionIndex] = useState(0)
   const attractionID = window.location.search.split('id=')[1]
-  const navigate = useNavigate()
   let tempIndex = 0
 
   const getAttractionData = () => {
     if (apiData.length === 0) return
     let [temp, tempIndex] = findFromApiData()
-    console.log([temp, tempIndex])
+    // console.log([temp, tempIndex])
     setAttractionData(temp)
-    setAttractionIndex(tempIndex)
+    // setAttractionIndex(tempIndex)
   }
   const findFromApiData = () => {
     return [apiData.find((item, index) => {
@@ -22,9 +20,14 @@ export function Attraction({ apiData }) {
     }), tempIndex]
   }
   useEffect(() => {
-    document.documentElement.scrollTop = 0
+    let imgHeight = document.querySelector('.logo-picture').offsetHeight
+    // document.documentElement.scrollTop = 0
+    document.documentElement.scrollTop = imgHeight
     getAttractionData()
-    console.log(attractionData)
+    document.querySelector('.search-set-pin form').style.display = 'none'
+    return () => {
+      document.querySelector('.search-set-pin form').style.display = 'grid'
+    }
   }, [apiData])
   return (
     <div className="attraction">

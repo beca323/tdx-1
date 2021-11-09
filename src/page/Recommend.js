@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 const currentURL = '/tdx-1'
@@ -64,7 +64,7 @@ export default function Recommend({ restaurantData, acticityData, tourismData, h
 
 export function ActivityCard({ item }) {
   return (
-    <a href={item?.WebsiteUrl} target="_blank" className="r-card card">
+    <a href={item?.WebsiteUrl} target="_blank" rel="noreferrer" className="r-card card">
       <div className="img">
         <img src={item?.Picture?.PictureUrl1} alt={item?.Name} />
       </div>
@@ -107,9 +107,9 @@ export function TourismCard({ item }) {
 
 export function HotelCard({ item }) {
   return (
-    <a href={item?.WebsiteUrl} target="_blank" className="r-card card">
+    <a href={item?.WebsiteUrl} target="_blank" rel="noreferrer" className="r-card card">
       <div className="img">
-        <img src={item?.Picture.PictureUrl1} atl={item?.Name} />
+        <img src={item?.Picture.PictureUrl1} alt={item?.Name} />
       </div>
       <div className="text">
         <div className="r-title title">{item?.Name}</div>

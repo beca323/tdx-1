@@ -1,4 +1,5 @@
 $base-color: #385c76;
+$second-color: #5994bf;
 * {
   box-sizing: border-box;
   align-items: center;
@@ -100,7 +101,13 @@ body {
   }
 }
 
+.reflect,
+.reflect * {
+  background-color: $base-color;
+  color: white;
+}
 .ScrollToTop {
+  display: none;
   position: fixed;
   bottom: 14vw;
   right: 3vw;
@@ -112,6 +119,10 @@ body {
   max-height: 60px;
   // display: none;
   // transition: all 1s;
+}
+
+.show {
+  display: block;
 }
 .r-a-tag {
   color: #e7a600;
@@ -176,18 +187,21 @@ body {
         margin-top: 20px;
         margin-bottom: 4px;
 
-        > div {
-          border: 1px solid currentColor;
-          margin: -1px;
+        > label {
+          border: 1px solid $base-color;
           padding: 0 20px;
           &:nth-child(1) {
             border-radius: 10px 0 0 0;
+            border-bottom: none;
+            border-right: none;
           }
           &:nth-child(2) {
             border-radius: 0 10px 0 0;
+            border-bottom: none;
           }
           &:nth-child(3) {
             border-radius: 0 0 0 10px;
+            border-right: none;
           }
           &:nth-child(4) {
             border-radius: 0 0 10px 0;
@@ -259,7 +273,7 @@ body {
       }
     }
   }
-  .hotel {
+  > .hotel {
     max-width: 900px;
     width: 94%;
     margin: 100px auto;
@@ -273,18 +287,27 @@ body {
       cursor: pointer;
       .text {
         white-space: nowrap;
-        overflow: hidden;
+        .title {
+          overflow: hidden;
+          @include mobile() {
+            font-size: 1.2rem;
+          }
+        }
       }
       .img {
         object-fit: cover;
         height: 200px;
         overflow: hidden;
+        img {
+          object-fit: cover;
+        }
       }
     }
   }
 }
 .tourism-card-container {
-  margin: auto;
+  // margin: auto;
+  margin: 60px auto;
   width: 94%;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -506,6 +529,7 @@ body {
   width: 94%;
   max-width: 870px;
   margin: auto;
+  margin-top: 60px;
   .img {
     width: 100%;
     overflow: hidden;
@@ -553,5 +577,90 @@ footer {
 @media (max-width: 768px) {
   .cardsContainer {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+.search-set-pin {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -10;
+  visibility: hidden;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+  > :first-child {
+    background-color: $base-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+  }
+  > div,
+  > form {
+    display: grid;
+    padding: 8px 24px;
+    background-color: white;
+  }
+
+  .mobile {
+    grid-template-columns: 1fr 1fr;
+    > label {
+      border: 1px solid $base-color;
+      line-height: 3rem;
+      padding: 0 20px;
+      &:nth-child(1) {
+        border-radius: 10px 0 0 0;
+        border-bottom: none;
+        border-right: none;
+      }
+      &:nth-child(2) {
+        border-radius: 0 10px 0 0;
+        border-bottom: none;
+      }
+      &:nth-child(3) {
+        border-radius: 0 0 0 10px;
+        border-right: none;
+      }
+      &:nth-child(4) {
+        border-radius: 0 0 10px 0;
+      }
+    }
+  }
+  > :nth-child(3) {
+    gap: 8px;
+    grid-template-columns: 1fr auto auto;
+    border-radius: 0 0 10px 10px;
+    .advance {
+      background-color: $second-color;
+    }
+    button,
+    input,
+    select {
+      border-radius: 8px;
+      margin: 0;
+    }
+    button {
+      border: none;
+      * {
+        color: white;
+      }
+    }
+  }
+}
+.pinToTop {
+  animation: slideDown 0.3s ease forwards;
+  @include mobile() {
+    z-index: 10;
+    visibility: visible;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

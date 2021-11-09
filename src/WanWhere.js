@@ -5,6 +5,8 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import { Attraction } from './page/Attraction'
 import Recommend from './page/Recommend'
 import { beautifulPictures } from './function/HomePictures'
+import { scrollListener } from './function/ScrollListener'
+import { WanWhereLogo } from './svg/rrsvg'
 
 const currentURL = '/tdx-1'
 export default function WanWhere() {
@@ -117,6 +119,13 @@ export default function WanWhere() {
         handleSelectCity={handleSelectCity}
         handleChangeFind={handleChangeFind}
         findWhat={findWhat} />
+      <SearchSetPin
+        keyword={keyword}
+        setKeyword={setKeyword}
+        handleSelectCity={handleSelectCity}
+        handleChangeFind={handleChangeFind}
+        findWhat={findWhat}
+        handleSearch={handleSearch} />
       <Routes>
         <Route path={`${currentURL}`} exact element={
           <Recommend
@@ -133,6 +142,7 @@ export default function WanWhere() {
 }
 
 export function LogoPicture({ beautifulPicture }) {
+
   return (
     <div className="logo-picture"
       style={{
@@ -174,10 +184,10 @@ export function SearchSet({ keyword, setKeyword, handleSearch, handleSelectCity,
         <label htmlFor="activity"><span></span>找活動</label>
       </div>
       <div className="mobile">
-        <div><i className="fas fa-camera"></i> 找景點</div>
-        <div><i className="fas fa-bed"></i> 找飯店</div>
-        <div><i className="fas fa-utensils"></i> 找美食</div>
-        <div><i className="fas fa-tag" style={{ transform: 'rotateY(180deg)' }}></i> 找活動</div>
+        <label htmlFor="view" className={findWhat === 'view' ? "reflect" : ""}><i className="fas fa-camera"></i> 找景點</label>
+        <label htmlFor="hotel" className={findWhat === 'hotel' ? "reflect" : ""}><i className="fas fa-bed"></i> 找飯店</label>
+        <label htmlFor="food" className={findWhat === 'food' ? "reflect" : ""}><i className="fas fa-utensils"></i> 找美食</label>
+        <label htmlFor="activity" className={findWhat === 'activity' ? "reflect" : ""}><i className="fas fa-tag" style={{ transform: 'rotateY(180deg)' }}></i> 找活動</label>
       </div>
       <form>
         <select className="selectCity" name="City" onChange={handleSelectCity} >
@@ -209,6 +219,58 @@ export function SearchSet({ keyword, setKeyword, handleSearch, handleSelectCity,
           onSubmit={handleSearch}
           type="text" placeholder="或用關鍵字搜尋想去哪玩？" />
         <button onClick={handleSearch} className="btn"><i className="fas fa-search"></i>&emsp;搜 尋</button>
+      </form>
+    </div>
+  )
+}
+
+export function SearchSetPin({ keyword, setKeyword, handleSearch, handleSelectCity, handleChangeFind, findWhat }) {
+  useEffect(() => {
+    scrollListener()
+  }, [])
+  return (
+    <div className="search-set-pin">
+      <div>
+        <WanWhereLogo />
+      </div>
+      <div className="mobile">
+        <label htmlFor="view" className={findWhat === 'view' ? "reflect" : ""}><i className="fas fa-camera"></i> 找景點</label>
+        <label htmlFor="hotel" className={findWhat === 'hotel' ? "reflect" : ""}><i className="fas fa-bed"></i> 找飯店</label>
+        <label htmlFor="food" className={findWhat === 'food' ? "reflect" : ""}><i className="fas fa-utensils"></i> 找美食</label>
+        <label htmlFor="activity" className={findWhat === 'activity' ? "reflect" : ""}><i className="fas fa-tag" style={{ transform: 'rotateY(180deg)' }}></i> 找活動</label>
+      </div>
+      <form>
+        <select className="selectCity" name="City" onChange={handleSelectCity} >
+          <option value="Taipei"> 臺北市  </option>
+          <option value="NewTaipei"> 新北市  </option>
+          <option value="Taoyuan"> 桃園市  </option>
+          <option value="Taichung"> 臺中市  </option>
+          <option value="Tainan"> 臺南市  </option>
+          <option value="Kaohsiung"> 高雄市  </option>
+          <option value="Keelung"> 基隆市  </option>
+          <option value="Hsinchu"> 新竹市  </option>
+          <option value="HsinchuCounty"> 新竹縣  </option>
+          <option value="MiaoliCounty"> 苗栗縣  </option>
+          <option value="ChanghuaCounty"> 彰化縣  </option>
+          <option value="NantouCounty"> 南投縣  </option>
+          <option value="YunlinCounty"> 雲林縣  </option>
+          <option value="ChiayiCounty"> 嘉義縣  </option>
+          <option value="Chiayi"> 嘉義市  </option>
+          <option value="PingtungCounty"> 屏東縣  </option>
+          <option value="YilanCounty"> 宜蘭縣  </option>
+          <option value="HualienCounty"> 花蓮縣  </option>
+          <option value="TaitungCounty"> 臺東縣  </option>
+          <option value="KinmenCounty"> 金門縣  </option>
+          <option value="PenghuCounty"> 澎湖縣  </option>
+          <option value="LienchiangCounty"> 連江縣  </option>
+        </select>
+        <input value={keyword}
+          onChange={e => setKeyword(e.target.value)}
+          onSubmit={handleSearch}
+          type="text" placeholder="打打關鍵字吧！" />
+        <button className="r-btn btn advance" >進階搜尋</button>
+        <button className="r-btn btn advance" >取消</button>
+        <button onClick={handleSearch} className="r-btn btn"><i className="fas fa-search"></i>&emsp;搜 尋</button>
       </form>
     </div>
   )
@@ -255,14 +317,11 @@ export function CardsContainer({ apiData }) {
 
 export function HotelCardsContainer({ hotelData }) {
   const top15 = hotelData.slice(0, 15)
-  useEffect(() => {
-    console.log(hotelData)
-  }, [])
   return (
     <div className="tourism-card-container hotel">
       {top15.map((item, index) => {
         return (
-          <a key={index} href={item?.WebsiteUrl} target="_blank" className="r-card card">
+          <a key={index} href={item?.WebsiteUrl} target="_blank" rel="noreferrer" className="r-card card">
             <div className="img">
               <img src={item?.Picture.PictureUrl1} atl={item?.Name} />
             </div>

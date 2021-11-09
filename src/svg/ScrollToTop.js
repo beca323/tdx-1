@@ -1,7 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export default function ScrollToTop() {
-
+  useEffect(() => {
+    let scrollposition
+    const showBtn = () => {
+      scrollposition = window.scrollY
+      if (scrollposition > 600) {
+        document.querySelector('.ScrollToTop').classList.toggle('show')
+        window.removeEventListener('scroll', showBtn)
+        window.addEventListener('scroll', hideBtn)
+      }
+    }
+    const hideBtn = () => {
+      scrollposition = window.scrollY
+      if (scrollposition <= 600) {
+        document.querySelector('.ScrollToTop').classList.toggle('show')
+        window.removeEventListener('scroll', hideBtn)
+        window.addEventListener('scroll', showBtn)
+      }
+    }
+    window.addEventListener('scroll', showBtn)
+  }, [])
   const handleScrollToTop = () => {
     document.documentElement.scrollTop = 0
   }
