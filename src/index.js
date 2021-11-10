@@ -12,9 +12,16 @@ ReactDOM.render(
     {/* <App /> */}
     <Router>
       <WanWhere />
+      <Mask />
       <Footer />
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
 )
 
+
+export function Mask() {
+  return (
+    <div id="mask"></div>
+  )
+}

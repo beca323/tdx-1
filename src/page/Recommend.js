@@ -66,7 +66,7 @@ export function ActivityCard({ item }) {
   return (
     <a href={item?.WebsiteUrl} target="_blank" rel="noreferrer" className="r-card card">
       <div className="img">
-        <img src={item?.Picture?.PictureUrl1} alt={item?.Name} />
+        <img src={item?.Picture?.PictureUrl1 ? item?.Picture?.PictureUrl1 : 'https://cdn.pixabay.com/photo/2020/01/04/18/40/trees-4741364_960_720.png'} alt={item?.Name} />
       </div>
       <div className="text">
         <div className="r-title">{item?.Name}</div>
@@ -84,7 +84,7 @@ export function TourismCard({ item }) {
     <div>
       <Link to={`${currentURL}/attraction?id=${item?.ID}`} className="tourism-card active-card">
         <div className="img">
-          <img src={item?.Picture.PictureUrl1} alt={item?.Name} />
+          <img src={item?.Picture?.PictureUrl1 ? item?.Picture?.PictureUrl1 : 'https://cdn.pixabay.com/photo/2020/01/04/18/40/trees-4741364_960_720.png'} alt={item?.Name} />
         </div>
         <div className="text">
           <div className="r-title title">{item?.Name}</div>
@@ -109,7 +109,7 @@ export function HotelCard({ item }) {
   return (
     <a href={item?.WebsiteUrl} target="_blank" rel="noreferrer" className="r-card card">
       <div className="img">
-        <img src={item?.Picture.PictureUrl1} alt={item?.Name} />
+        <img src={item?.Picture?.PictureUrl1 ? item?.Picture?.PictureUrl1 : 'https://cdn.pixabay.com/photo/2020/01/04/18/40/trees-4741364_960_720.png'} alt={item?.Name} />
       </div>
       <div className="text">
         <div className="r-title title">{item?.Name}</div>

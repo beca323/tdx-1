@@ -225,6 +225,11 @@ export function SearchSet({ keyword, setKeyword, handleSearch, handleSelectCity,
 }
 
 export function SearchSetPin({ keyword, setKeyword, handleSearch, handleSelectCity, handleChangeFind, findWhat }) {
+  const [advanceSearch, setAdvanceSearch] = useState(false)
+  const handleAdvanceBtn = () => {
+    setAdvanceSearch(!advanceSearch)
+    document.querySelector('#mask').classList.toggle('show')
+  }
   useEffect(() => {
     scrollListener()
   }, [])
@@ -233,14 +238,14 @@ export function SearchSetPin({ keyword, setKeyword, handleSearch, handleSelectCi
       <div>
         <WanWhereLogo />
       </div>
-      <div className="mobile">
+      <div className={advanceSearch ? "mobile show" : "mobile"}>
         <label htmlFor="view" className={findWhat === 'view' ? "reflect" : ""}><i className="fas fa-camera"></i> 找景點</label>
         <label htmlFor="hotel" className={findWhat === 'hotel' ? "reflect" : ""}><i className="fas fa-bed"></i> 找飯店</label>
         <label htmlFor="food" className={findWhat === 'food' ? "reflect" : ""}><i className="fas fa-utensils"></i> 找美食</label>
         <label htmlFor="activity" className={findWhat === 'activity' ? "reflect" : ""}><i className="fas fa-tag" style={{ transform: 'rotateY(180deg)' }}></i> 找活動</label>
       </div>
-      <form>
-        <select className="selectCity" name="City" onChange={handleSelectCity} >
+      <form onSubmit={handleSearch} className={advanceSearch ? "advanceSearch-style" : ""}>
+        <select className={advanceSearch ? "selectCity show" : "selectCity"} name="City" onChange={handleSelectCity} >
           <option value="Taipei"> 臺北市  </option>
           <option value="NewTaipei"> 新北市  </option>
           <option value="Taoyuan"> 桃園市  </option>
@@ -268,11 +273,12 @@ export function SearchSetPin({ keyword, setKeyword, handleSearch, handleSelectCi
           onChange={e => setKeyword(e.target.value)}
           onSubmit={handleSearch}
           type="text" placeholder="打打關鍵字吧！" />
-        <button className="r-btn btn advance" >進階搜尋</button>
-        <button className="r-btn btn advance" >取消</button>
-        <button onClick={handleSearch} className="r-btn btn"><i className="fas fa-search"></i>&emsp;搜 尋</button>
+        <div>
+          <button type="button" className="r-btn btn advance" onClick={handleAdvanceBtn} >{advanceSearch === true ? '取消' : '進階搜尋'}</button>
+          <button onClick={handleSearch} className="r-btn btn"><i className="fas fa-search"></i>&emsp;搜 尋</button>
+        </div>
       </form>
-    </div>
+    </div >
   )
 }
 
@@ -323,7 +329,7 @@ export function HotelCardsContainer({ hotelData }) {
         return (
           <a key={index} href={item?.WebsiteUrl} target="_blank" rel="noreferrer" className="r-card card">
             <div className="img">
-              <img src={item?.Picture.PictureUrl1} atl={item?.Name} />
+              <img src={item?.Picture.PictureUrl1 ? item?.Picture.PictureUrl1 : 'https://cdn.pixabay.com/photo/2020/01/04/18/40/trees-4741364_960_720.png'} atl={item?.Name} />
             </div>
             <div className="text">
               <div className="r-title title">{item?.Name}</div>

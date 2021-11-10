@@ -11,6 +11,8 @@ export function Attraction({ apiData }) {
     let [temp, tempIndex] = findFromApiData()
     // console.log([temp, tempIndex])
     setAttractionData(temp)
+    console.log(temp)
+
     // setAttractionIndex(tempIndex)
   }
   const findFromApiData = () => {
@@ -19,14 +21,17 @@ export function Attraction({ apiData }) {
       return item.ID === attractionID
     }), tempIndex]
   }
+  let imgHeight
   useEffect(() => {
-    let imgHeight = document.querySelector('.logo-picture').offsetHeight
-    // document.documentElement.scrollTop = 0
-    document.documentElement.scrollTop = imgHeight
+    // imgHeight = document.querySelector('.logo-picture').offsetHeight
+    // console.log(imgHeight)
+    document.documentElement.scrollTop = 600
     getAttractionData()
     document.querySelector('.search-set-pin form').style.display = 'none'
+    document.querySelector('.search-set-pin .mobile').style.display = 'none'
     return () => {
       document.querySelector('.search-set-pin form').style.display = 'grid'
+      document.querySelector('.search-set-pin .mobile').style.display = 'grid'
     }
   }, [apiData])
   return (
