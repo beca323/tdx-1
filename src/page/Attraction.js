@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 
 export function Attraction({ apiData }) {
   const [attractionData, setAttractionData] = useState([])
@@ -51,11 +52,45 @@ export function Attraction({ apiData }) {
       <div className="r-title-2">介紹：</div>
       <div>{attractionData.DescriptionDetail}</div>
       <div className="r-title-2">交通資訊：</div>
-      <div className="buttons">
-        <div className="r-btn-outline" >&lt;&lt; 上一個</div>
-        <div className="r-btn-outline" >回首頁</div>
-        <div className="r-btn-outline">下一個 &gt;&gt;</div>
-      </div>
+      {attractionData.Position ?
+        <MapContainer id="mapid" center={[25.02, 121.56]} zoom={13} scrollWheelZoom={true}>
+          <MyMap position={attractionData.Position} attractionData={attractionData} />
+        </MapContainer>
+        : ''
+      }
+      <PageBtn />
+    </div>
+  )
+}
+
+export function MyMap({ position, attractionData }) {
+  const [mapPosition, setMapPosistion] = useState([25.02, 121.56])
+  const map = useMap()
+  useEffect(() => {
+    if (position) {
+      setMapPosistion([position?.PositionLat, position?.PositionLon])
+      map.setView([position?.PositionLat, position?.PositionLon])
+    }
+  }, [position])
+  return (
+    <div>
+      <TileLayer
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={mapPosition}>
+        <Popup>{attractionData?.Name}</Popup>
+      </Marker>
+    </div>
+  )
+}
+
+export function PageBtn() {
+  return (
+    <div className="buttons">
+      <div className="r-btn-outline" >&lt;&lt; 上一個</div>
+      <div className="r-btn-outline" >回首頁</div>
+      <div className="r-btn-outline">下一個 &gt;&gt;</div>
     </div>
   )
 }

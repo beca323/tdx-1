@@ -574,6 +574,11 @@ div#mask.show {
       background-color: $base-color;
     }
   }
+  #mapid {
+    z-index: 0;
+    height: 300px;
+    width: 100%;
+  }
 }
 footer {
   color: white;
