@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { Link } from 'react-router-dom'
+
+const currentURL = '/tdx-1'
 
 export function Attraction({ apiData }) {
   const [attractionData, setAttractionData] = useState([])
@@ -49,6 +52,8 @@ export function Attraction({ apiData }) {
         {attractionData.Class2 ? <span className="tourism-tag "># {attractionData.Class2}</span> : ''}
         {attractionData.Class3 ? <span className="tourism-tag "># {attractionData.Class3}</span> : ''}
       </div>
+      <div className="r-title-2">開放時間：</div>
+      <div>{attractionData.OpenTime}</div>
       <div className="r-title-2">介紹：</div>
       <div>{attractionData.DescriptionDetail}</div>
       <div className="r-title-2">交通資訊：</div>
@@ -58,6 +63,9 @@ export function Attraction({ apiData }) {
         </MapContainer>
         : ''
       }
+      {attractionData.Phone ? <div className="r-title-2">聯絡電話：
+        <a href={'tel:' + attractionData.Phone}>{attractionData.Phone}</a>
+      </div> : ''}
       <PageBtn />
     </div>
   )
@@ -89,7 +97,7 @@ export function PageBtn() {
   return (
     <div className="buttons">
       <div className="r-btn-outline" >&lt;&lt; 上一個</div>
-      <div className="r-btn-outline" >回首頁</div>
+      <Link to={`${currentURL}`} className="r-btn-outline" >回首頁</Link>
       <div className="r-btn-outline">下一個 &gt;&gt;</div>
     </div>
   )

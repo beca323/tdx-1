@@ -5,8 +5,9 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import { Attraction } from './page/Attraction'
 import Recommend from './page/Recommend'
 import { beautifulPictures } from './function/HomePictures'
-import { scrollListener } from './function/ScrollListener'
+import { scrollListener, topFunction } from './function/ScrollListener'
 import { WanWhereLogo } from './svg/rrsvg'
+import TaiwanMap from './page/TaiwanMap'
 
 const currentURL = '/tdx-1'
 export default function WanWhere() {
@@ -50,6 +51,28 @@ export default function WanWhere() {
           setHotelData(result)
         })
         break
+      case 'food':
+        navigate(currentURL + '/search-food')
+        getRestaurantAPI(selectCity).then(result => {
+          if (keyword.replace(' ') !== '') {
+            result = result.filter(e => e.Name.includes(keyword))
+          }
+          console.log(result)
+          setRestaurantData(result)
+        })
+        break
+      case 'activity':
+        navigate(currentURL + '/search-restaurant')
+        getActivityAPI(selectCity).then(result => {
+          if (keyword.replace(' ') !== '') {
+            result = result.filter(e => e.Name.includes(keyword))
+          }
+          console.log(result)
+          setActicityData(result)
+        })
+        break
+
+
       default:
         break
     }
@@ -102,10 +125,13 @@ export default function WanWhere() {
   }
 
   useEffect(() => {
+    topFunction()
     apiFunctions.tourism()
     apiFunctions.activity()
     apiFunctions.hotel()
     apiFunctions.restaurant()
+
+
   }, [])
 
   return (
@@ -135,7 +161,10 @@ export default function WanWhere() {
             restaurantData={restaurantData} />} />
         <Route path={`${currentURL}/search-view`} element={<CardsContainer apiData={apiData} />} />
         <Route path={`${currentURL}/search-hotel`} element={<HotelCardsContainer hotelData={hotelData} />} />
+        <Route path={`${currentURL}/search-food`} element={<HotelCardsContainer hotelData={restaurantData} />} />
+        <Route path={`${currentURL}/search-restaurant`} element={<HotelCardsContainer hotelData={acticityData} />} />
         <Route path={`${currentURL}/attraction`} element={<Attraction apiData={apiData} />} />
+        <Route path={`${currentURL}/taiwanmap`} element={<TaiwanMap apiData={apiData} />} />
       </Routes>
     </div>
   )
@@ -157,9 +186,10 @@ export function LogoPicture({ beautifulPicture }) {
         </a>
         <h1>{beautifulPicture.pictureName}</h1>
         <div className="subtitle">
-          <a href="./" style={{ color: 'white' }}>
+          <a href={`${currentURL}` + '/taiwanmap?city=' + beautifulPicture.value}
+            style={{ color: 'white' }}>
             {beautifulPicture.cn}去哪兒？>>
-        </a>
+          </a>
         </div>
       </div>
       <div> </div>

@@ -24,19 +24,22 @@ function getAPIfunction(url, city, sessionName) {
   return axios(url + city, { headers: getAuthorizationHeader() })
     .then((response) => {
       sessionStorage.setItem(sessionName, JSON.stringify(response.data))
-      console.log(response.data[0])
+      // console.log('fetch api: ')
+      // console.log(response.data[0])
       return response.data
     })
     .catch((error) => {
       return 'error: ' + error
     })
 }
-// let AppID = '5ddfc0c285614c22a8a286f5bff4129a'
-// let AppKey = 'GIOQcKqB9crpqy0er73phPbKy2Y'
+
+let AppID = process.env.REACT_APP_APPID
+let AppKey = process.env.REACT_APP_APPKEY
+
 function getAuthorizationHeader() {
   //  填入自己 ID、KEY 開始
-  let AppID = 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'
-  let AppKey = 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'
+  // let AppID = 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'
+  // let AppKey = 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF'
   //  填入自己 ID、KEY 結束
   let GMTString = new Date().toGMTString()
   let ShaObj = new jsSHA('SHA-1', 'TEXT')
