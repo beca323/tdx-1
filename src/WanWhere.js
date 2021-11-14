@@ -19,7 +19,8 @@ export default function WanWhere() {
   const [findWhat, setFindWhat] = useState('view')
   const [keyword, setKeyword] = useState('')
   const navigate = useNavigate()
-  const beautifulPicture = beautifulPictures[2]
+  const [beautifulPicture, setBeautifulPicture] = useState([])
+  // const beautifulPicture = beautifulPictures[1]
   const handleSelectCity = (e) => {
     // console.log(e.target.value)
     setSelectCity(e.target.value)
@@ -124,6 +125,11 @@ export default function WanWhere() {
     }
   }
 
+
+  const rndBeautifulPic = () => {
+    console.log(Math.floor(Math.random() * 6))
+    setBeautifulPicture(beautifulPictures[Math.floor(Math.random() * 6)])
+  }
   useEffect(() => {
     topFunction()
     apiFunctions.tourism()
@@ -131,7 +137,7 @@ export default function WanWhere() {
     apiFunctions.hotel()
     apiFunctions.restaurant()
 
-
+    rndBeautifulPic()
   }, [])
 
   return (
@@ -173,23 +179,22 @@ export default function WanWhere() {
 export function LogoPicture({ beautifulPicture }) {
 
   return (
-    <div className="logo-picture"
-      style={{
-        background: 'url(' + beautifulPicture.pictureUrl + ')',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center'
-      }}>
+    <div className="logo-picture" >
+      <img src={`${beautifulPicture.pictureUrl}`} alt="view-picture" />
       <div>
         <a href={currentURL} >
           <img src={currentURL + "/image/Logo.png"} alt="灣去哪兒？" />
         </a>
         <h1>{beautifulPicture.pictureName}</h1>
         <div className="subtitle">
-          <a href={`${currentURL}` + '/taiwanmap?city=' + beautifulPicture.value}
-            style={{ color: 'white' }}>
+          <Link to={`${currentURL}` + '/taiwanmap?city=' + beautifulPicture.value}
+            style={{
+              color: 'white',
+              textShadow: '0 0 grey',
+              fontWeight: 'bold'
+            }}>
             {beautifulPicture.cn}去哪兒？>>
-          </a>
+          </Link>
         </div>
       </div>
       <div> </div>
@@ -265,17 +270,17 @@ export function SearchSetPin({ keyword, setKeyword, handleSearch, handleSelectCi
   }, [])
   return (
     <div className="search-set-pin">
-      <div>
+      <Link to={`${currentURL}`}>
         <WanWhereLogo />
-      </div>
-      <div className={advanceSearch ? "mobile show" : "mobile"}>
+      </Link>
+      <div className={advanceSearch === true ? "mobile show" : "mobile"}>
         <label htmlFor="view" className={findWhat === 'view' ? "reflect" : ""}><i className="fas fa-camera"></i> 找景點</label>
         <label htmlFor="hotel" className={findWhat === 'hotel' ? "reflect" : ""}><i className="fas fa-bed"></i> 找飯店</label>
         <label htmlFor="food" className={findWhat === 'food' ? "reflect" : ""}><i className="fas fa-utensils"></i> 找美食</label>
         <label htmlFor="activity" className={findWhat === 'activity' ? "reflect" : ""}><i className="fas fa-tag" style={{ transform: 'rotateY(180deg)' }}></i> 找活動</label>
       </div>
       <form onSubmit={handleSearch} className={advanceSearch ? "advanceSearch-style" : ""}>
-        <select className={advanceSearch ? "selectCity show" : "selectCity"} name="City" onChange={handleSelectCity} >
+        <select className={advanceSearch === true ? "selectCity show" : "selectCity"} name="City" onChange={handleSelectCity} >
           <option value="Taipei"> 臺北市  </option>
           <option value="NewTaipei"> 新北市  </option>
           <option value="Taoyuan"> 桃園市  </option>
@@ -313,12 +318,49 @@ export function SearchSetPin({ keyword, setKeyword, handleSearch, handleSelectCi
 }
 
 export function CardsContainer({ apiData }) {
-  // useEffect(() => {
-  //   console.log(apiData[0])
-  // }, [])
+  const [pageCount, setPageCount] = useState([])
+  const [nowPage, setNowPage] = useState(1)
+  const [onePage, setOnePage] = useState(apiData.slice(0, 15))
+  const [pagePage, setPagePage] = useState([])
+  const [pagePageCount, setPagePageCount] = useState(0)
+  useEffect(() => {
+    const count = Math.floor(apiData.length / 15) + 1
+    const countArray = [...Array(count).keys()]
+    let tempPageCount = [...countArray.slice(1, countArray.length), countArray.length]
+    setPageCount(tempPageCount)
+    setOnePage(apiData.slice(0, 15))
+    setNowPage(1)
+    setPagePage(tempPageCount.slice(0, 10))
+  }, [apiData])
+  const handleClickPage = (e) => {
+    const tempNumber = Number(e.target.getAttribute('value'))
+    setNowPage(tempNumber)
+    setOnePage(apiData.slice((tempNumber - 1) * 15, (tempNumber - 1) * 15 + 15))
+    document.documentElement.scrollTop = 400
+  }
+  const handlePrePagesList = () => {
+    setNowPage((pagePageCount - 1) * 10 + 1)
+    setPagePage(pageCount.slice((pagePageCount - 1) * 10, (pagePageCount) * 10))
+
+    // 換內容
+    setOnePage(apiData.slice(((pagePageCount - 1) * 10) * 15, ((pagePageCount - 1) * 10) * 15 + 15))
+    document.documentElement.scrollTop = 400
+
+    setPagePageCount(ppc => ppc - 1)
+  }
+  const handleNextPagesList = () => {
+    setNowPage((pagePageCount + 1) * 10 + 1)
+    setPagePage(pageCount.slice((pagePageCount + 1) * 10, (pagePageCount + 2) * 10))
+
+    // 換內容
+    setOnePage(apiData.slice(((pagePageCount + 1) * 10) * 15, ((pagePageCount + 1) * 10) * 15 + 15))
+    document.documentElement.scrollTop = 400
+
+    setPagePageCount(ppc => ppc + 1)
+  }
   return (
     <div className="tourism-card-container">
-      {apiData.map((item, index) => {
+      {onePage.map((item, index) => {
         return (
           <div key={index}>
             <Link to={`${currentURL}/attraction?id=${item.ID}`}
@@ -347,6 +389,19 @@ export function CardsContainer({ apiData }) {
           </div>
         )
       })}
+      <div className="pageination">
+        <div className={nowPage <= 10 ? "hide" : ""}
+          onClick={handlePrePagesList}><i className="fas fa-angle-double-left"></i></div>
+        {pagePage.map((item) => {
+          return (
+            <div key={item} className={nowPage == item ? "reflect" : ""}
+              onClick={handleClickPage}
+              value={item}>{item}</div>
+          )
+        })}
+        <div onClick={handleNextPagesList}
+          className={pagePage.length < 10 ? "hide" : ""}><i className="fas fa-angle-double-right"></i></div>
+      </div>
     </div>
   )
 }

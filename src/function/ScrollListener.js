@@ -11,7 +11,7 @@ export const scrollListener = () => {
   }
   const getHeightAgain = () => {
     scrollposition = window.scrollY
-    if (scrollposition < imgHeight) {
+    if (scrollposition <= imgHeight) {
       document.querySelector('.search-set-pin').classList.toggle('pinToTop')
       window.removeEventListener('scroll', getHeightAgain)
       window.addEventListener('scroll', getHeight)

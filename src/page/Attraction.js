@@ -29,7 +29,6 @@ export function Attraction({ apiData }) {
   useEffect(() => {
     // imgHeight = document.querySelector('.logo-picture').offsetHeight
     // console.log(imgHeight)
-    document.documentElement.scrollTop = 600
     getAttractionData()
     document.querySelector('.search-set-pin form').style.display = 'none'
     document.querySelector('.search-set-pin .mobile').style.display = 'none'
@@ -38,6 +37,9 @@ export function Attraction({ apiData }) {
       document.querySelector('.search-set-pin .mobile').style.display = 'grid'
     }
   }, [apiData])
+  useEffect(() => {
+    document.documentElement.scrollTop = 600
+  }, [])
   return (
     <div className="attraction">
       {attractionData.Picture ?

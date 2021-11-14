@@ -144,6 +144,19 @@ div#mask.show {
 .WanWhere {
   height: 100%;
   .logo-picture {
+    overflow: hidden;
+    > img {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    // background-size: cover;
+    // background-repeat: no-repeat;
+    // background-position: center;
+    //     backgroundSize: 'cover',
+    //     backgroundRepeat: 'no-repeat',
+    //     backgroundPosition: 'center'
     height: 500px;
     > div {
       height: 500px;
@@ -313,6 +326,35 @@ div#mask.show {
       }
     }
   }
+  .pageination {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 5px;
+    width: fit-content;
+    margin: auto;
+    .hide {
+      display: none;
+    }
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 3rem;
+      height: 3rem;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      border: 1px solid $base-color;
+      &:hover {
+        color: white;
+        background-color: $base-color;
+      }
+      @include mobile() {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
 }
 .tourism-card-container {
   // margin: auto;
@@ -326,7 +368,8 @@ div#mask.show {
 }
 .tourism-card {
   max-width: 900px;
-  margin: 30px auto;
+  margin: auto;
+  margin-bottom: 30px;
   display: grid;
   grid-template-columns: 1fr 1.6fr;
   gap: 44px;

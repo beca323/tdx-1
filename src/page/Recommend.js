@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 const currentURL = '/tdx-1'
 export default function Recommend({ restaurantData, acticityData, tourismData, hotelData }) {
+  useEffect(() => {
+    document.documentElement.scrollTop = 0
+  }, [])
   return (
     <div className="Recommend">
       <section>

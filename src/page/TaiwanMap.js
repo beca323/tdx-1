@@ -29,9 +29,7 @@ export default function TaiwanMap({ apiData }) {
   const [city, setCity] = useState('臺北市')
   useEffect(() => {
     const url = window.location.href
-    // console.log(url.split('city=')[1])
     let cityNameforAPI = valueToEn(url.split('city=')[1])
-    console.log(cityNameforAPI)
     let cnName = valueToCn(url.split('city=')[1])
     setCity(cnName)
 
@@ -39,7 +37,6 @@ export default function TaiwanMap({ apiData }) {
     // toColor(url.split('city=')[1])
 
     getTourismAPI(cityNameforAPI).then(result => {
-      console.log(result[0])
       setMapSearchData(result)
     }).then(() => {
       toColor(url.split('city=')[1])
@@ -93,7 +90,6 @@ export function ViewList({ apiData, zipCode }) {
   useEffect(() => {
     if (!apiData) return
     setListData(apiData.filter(item => { return item.ZipCode === zipCode }).slice(0, 12))
-    console.log(apiData.filter(item => { return item.ZipCode === zipCode })[0])
   }, [zipCode, apiData])
   return (
     <div className="ViewList r-card">
